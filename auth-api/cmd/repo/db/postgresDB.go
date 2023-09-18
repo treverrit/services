@@ -14,7 +14,7 @@ type Postgres struct {
 
 func NewPostgresStore() (*Postgres, error) {
 	// the init options for the connection to a postgres database
-	connStr := "user=gerri dbname=postgres password=H4ll1h@ll0 sslmode=disable"
+	connStr := "user=gerri dbname=postgres password=Secret sslmode=disable"
 
 	// try to open a database
 	db, err := sql.Open("postgres", connStr)
