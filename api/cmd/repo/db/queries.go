@@ -14,7 +14,16 @@ const (
 
 	createUUIDExtensionQuery = "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\""
 
-	//uniqueConstraintQuery = `ALTER TABLE account ADD CONSTRAINT unique_email UNIQUE (email)`
+	checkUniqueConstraintQuery = `
+	SELECT EXISTS (
+		SELECT 1
+		FROM information_schema.table_constraints
+		WHERE table_name = 'account'
+		AND constraint_name = 'unique_email'
+		AND constraint_type = 'UNIQUE'
+	)`
+
+	uniqueConstraintQuery = `ALTER TABLE account ADD CONSTRAINT unique_email UNIQUE (email)`
 
 	//dropTableQuery = `drop table account`
 

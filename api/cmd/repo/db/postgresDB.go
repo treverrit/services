@@ -4,6 +4,7 @@ import (
 	"authapi/cmd/repo/types"
 	"database/sql"
 	"fmt"
+	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -14,7 +15,10 @@ type Postgres struct {
 
 func NewPostgresStore() (*Postgres, error) {
 	// the init options for the connection to a postgres database
-	connStr := "user=gerri dbname=postgres password=Secret sslmode=disable"
+	user := os.Getenv("POSTGRES_USER")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	port := os.Getenv("POSTGRES_PORT")
+	connStr := fmt.Sprintf("user=%s dbname=postgres password=%s port=%s sslmode=disable", user, password, port)
 
 	// try to open a database
 	db, err := sql.Open("postgres", connStr)
@@ -32,7 +36,6 @@ func NewPostgresStore() (*Postgres, error) {
 			return nil, err
 		}
 	}
-
 	// try to verify the connection
 	if err := db.Ping(); err != nil {
 		return nil, err
@@ -43,8 +46,22 @@ func NewPostgresStore() (*Postgres, error) {
 
 // try to run the database
 func (store *Postgres) Init() error {
-	_, err := store.storage.Exec(createAccountTableQuery)
-	return err
+	if _, err := store.storage.Exec(createAccountTableQuery); err != nil {
+		return fmt.Errorf("could not create account table: %v", err)
+	}
+
+	var constraintExists bool
+	if err := store.storage.QueryRow(checkUniqueConstraintQuery).Scan(&constraintExists); err != nil {
+		return fmt.Errorf("could not check constraint: %v", err)
+	}
+
+	if !constraintExists {
+		if _, err := store.storage.Exec(uniqueConstraintQuery); err != nil {
+			return fmt.Errorf("could not create constraint: %v", err)
+		}
+	}
+
+	return nil
 }
 
 func (store *Postgres) CreateAccount(account *types.Account) (*types.Account, error) {
