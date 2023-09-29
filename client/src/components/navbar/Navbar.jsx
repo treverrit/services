@@ -5,14 +5,13 @@ import { NavbarLink } from '../../styles/links'
 import { CollapseButton } from '../../styles/buttons'
 import { useOutletContext } from 'react-router-dom'
 
-function Navbar({click, setClick, jwt, handleLogout, name, id}) {
-  const handleClick = () => setClick(!click)
+function Navbar({click, setClick, jwt, handleLogout, name, id, hasSideNav}) {
   
   return (
     <>
       <NavbarDiv>
         <LeftSide>
-          <CollapseButton onClick={handleClick} click={click}/>
+          {hasSideNav && (<CollapseButton onClick={() => setClick(!click)} click={click}/>)}
           <GradientText>KBach</GradientText>
         </LeftSide>
         <NavbarLinks>

@@ -8,7 +8,7 @@ flex-direction: column;
 justify-content: center;
 align-items: center;
 width: 70%;
-height: 80%;
+height: 62.5%;
 `
 export const LoginSubmit = styled(Button)`
 padding: 0.5rem 0;

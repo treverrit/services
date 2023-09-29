@@ -2,16 +2,22 @@ import React, {useCallback, useEffect, useState} from 'react'
 import Navbar from './components/navbar/Navbar'
 import { PageContainer } from './appStyles'
 import Sidenav from './components/sidenav/Sidenav'
-import {Outlet} from 'react-router-dom'
+import LandingNav from './components/landingNav/LandingNav'
+import {Outlet, useLocation} from 'react-router-dom'
 
 function App() {
-  const [clickCollapse, setClickColapse] = useState(false)
-  const [userName, setUserName] = useState("")
-  const [id, setId] = useState("")
-  const [jwt, setJWT] = useState("")
+  const [clickCollapse, setClickColapse] = useState(false) // for the collapse button
+  const [userName, setUserName] = useState("") // to set the username to view it
+  const [id, setId] = useState("") // for eventual requests not save to live 
+  const [jwt, setJWT] = useState("") // to set the jwt and access
   const [tickInterval, setTickInterval] = useState(null)
+  const [selected, setSelected] = useState("welcome")
+  const location = useLocation()
   console.log(`jwt: ${jwt}`)
+  console.log(`location: ${location.pathname}`)
+  const hasSideNav = location.pathname !== "/register" && location.pathname !== "/login"
 
+  // send request to refresh every 10 minutes or everytime it was used with status true
   const toggleRefresh = useCallback((status) => {
     if (status) {
       const interval = setInterval(() => {
@@ -36,6 +42,7 @@ function App() {
     }
   }, [tickInterval])
 
+  // refreshes th token every time the side is refreshed
   useEffect(() => {
     if (jwt === "") {
       const requestOptions = {
@@ -57,6 +64,7 @@ function App() {
     }
   }, [jwt, toggleRefresh])
 
+  // set jwt to an empty string and calls the backend to delete the tokens
   const handleLogout = () => {
     const headers = new Headers()
     headers.append("Content-Type", "application/json")
@@ -84,8 +92,18 @@ function App() {
         handleLogout={handleLogout} 
         name={userName}
         id={id}
+        hasSideNav={hasSideNav}
       />  
-      <Sidenav click={clickCollapse}/>
+      {hasSideNav && (
+        location.pathname === "/" 
+        ? <LandingNav 
+            click={clickCollapse} 
+            selected={selected} 
+            setSelected={setSelected}
+          />
+        : <Sidenav click={clickCollapse}/>
+      )
+      }
       <PageContainer>
         <Outlet
           context={{
@@ -93,6 +111,7 @@ function App() {
             userName, setUserName,
             id, setId,
             toggleRefresh,
+            hasSideNav
           }}
         />
       </PageContainer>
