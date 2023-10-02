@@ -9,6 +9,9 @@ position: fixed;
 top: 0;
 left: 0;
 right: 0;
+@media screen and (max-width: 500px){
+    height: 4rem;
+}
 `
 
 export const NavbarLinks = styled.div`

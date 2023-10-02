@@ -23,6 +23,14 @@ cursor: pointer;
 }
 
 &:hover{&::before{transform: scale(1, 1);}}
+
+@media screen and (max-width: 500px){
+    margin: 0.5rem 1rem;
+}
+`
+export const MobileNavLink = styled(NavbarLink)`
+width: ${props => props.click ? "auto" : "0"};
+transition: all ease 0.3s;
 `
 export const LandingNavDescription = styled.span`
 overflow: hidden;
@@ -68,4 +76,31 @@ align-items: center;
 text-decoration: none;
 margin-bottom: 1rem;
 cursor: pointer;
+`
+
+export const SidebarLink = styled.a`
+color: white;
+font-size: 1.2rem;
+display: flex;
+flex-direction: row;
+justify-content: left;
+align-items: center;
+width: 100%;
+padding: 0.75rem 0;
+cursor: pointer;
+transition: all 0.3s ease;
+
+svg {
+    padding: 0 1.25rem;
+    color: white;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+span {
+    width: ${props => props.click ? "60%" : "0"};
+    margin-left: ${props => props.click ? "1rem" : "0"};
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
 `

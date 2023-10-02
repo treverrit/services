@@ -1,6 +1,7 @@
 import React from 'react'
-import { SidebarItems, SidebarLink, SidenavContainer } from './styles'
+import { SidebarItems, SidenavContainer } from './styles'
 import {BiAccessibility} from 'react-icons/bi'
+import { SidebarLink } from '../../styles/links'
 
 function Sidenav({click}) {
   return (

@@ -4,6 +4,8 @@ import { PageContainer } from './appStyles'
 import Sidenav from './components/sidenav/Sidenav'
 import LandingNav from './components/landingNav/LandingNav'
 import {Outlet, useLocation} from 'react-router-dom'
+import useMediaQuery from './hooks/useMediaQuery'
+import LandingNavigation from './sections/landingNavigation/LandingNavigation'
 
 function App() {
   const [clickCollapse, setClickColapse] = useState(false) // for the collapse button
@@ -16,6 +18,7 @@ function App() {
   console.log(`jwt: ${jwt}`)
   console.log(`location: ${location.pathname}`)
   const hasSideNav = location.pathname !== "/register" && location.pathname !== "/login"
+  const isAboveMobileScreens = useMediaQuery("(min-width: 500px)")
 
   // send request to refresh every 10 minutes or everytime it was used with status true
   const toggleRefresh = useCallback((status) => {
@@ -86,6 +89,7 @@ function App() {
   return (
     <>
       <Navbar 
+        aboveMobile={isAboveMobileScreens}
         click={clickCollapse} 
         setClick={setClickColapse} 
         jwt={jwt}
@@ -96,12 +100,16 @@ function App() {
       />  
       {hasSideNav && (
         location.pathname === "/" 
-        ? <LandingNav 
-            click={clickCollapse} 
-            selected={selected} 
+        ? <LandingNavigation
+            click={clickCollapse}
+            setClick={setClickColapse}
+            aboveMobile={isAboveMobileScreens}
+            selected={selected}
             setSelected={setSelected}
           />
-        : <Sidenav click={clickCollapse}/>
+        : <Sidenav
+            click={clickCollapse}
+          />
       )
       }
       <PageContainer>
@@ -120,3 +128,5 @@ function App() {
 }
 
 export default App
+
+

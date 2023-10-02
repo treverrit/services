@@ -10,6 +10,10 @@ font-size: 1.8rem;
 @media screen and (max-width: 800px) {
     font-size: 1.6rem;
 }
+
+@media screen and (max-width: 500px){
+    padding-left: 1rem;
+}
 `
 
 export const PageHeaderText = styled(GradientText)`
